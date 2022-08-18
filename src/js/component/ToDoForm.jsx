@@ -1,37 +1,25 @@
 import React, { useState } from "react";
 
-function ToDoForm(props) {
-    const [inputValue, setInputValue] = useState("");
+function TodoForm(props) {
+  const [input, setInput] = useState("");
 
-    const handleChange = e => {
-        setInputValue(e.target.value);
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    props.addTodo(input)
+    setInput("")
+  }
 
-    const handleSubmit = e => {
-        e.preventDefault();
-
-        props.onSubmit({
-            id: Math.floor(Math.random() * 1000),
-            text: inputValue
-        });
-
-        setInputValue("");
-    }
-    
-    return (
-    <form className="todo-form" onSubmit={handleSubmit}>
-       <input 
-        type="text" 
-        placeholder="Añade una tarea" 
-        value={inputValue} 
-        name="text" 
-        className="todo-input"
-        onChange={handleChange}
-        />
-        <button className="todo-button">Añadir</button>
-    
+  return (
+    <form onSubmit={handleSubmit} className="todo-form">
+      <input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className="todo-input fs-5 border-bottom "
+        placeholder="Añade una tarea"
+      />
+      <button type="submit" className="btn btn-secondary btn-lg todo-button fs-5">Añadir</button>
     </form>
-  )
+  );
 }
 
-export default ToDoForm;
+export default TodoForm

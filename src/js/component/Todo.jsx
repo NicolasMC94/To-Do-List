@@ -1,40 +1,47 @@
 import React, { useState } from "react";
-import { RiCloseCircleLine } from "react-icons/ri";
-import { TiEdit } from "react-icons/ti";
-import ToDoForm from "./ToDoForm.jsx";
+import TodoForm from "./ToDoForm.jsx";
+import TodoItem from "./ToDoItem.jsx";
 
-const Todo= ({ items, completeItem, removeItem, updateItem }) => {
-    const [edit, setEdit] = useState({
-        id: null,
-        value: ""
-    });
-  
-    const submitUpdate = value => {
-        updateTodo(edit.id, value);
-        setEdit({
-          id: null,
-          value: ""
-        });
-    };
+function Todo() {
+  const [todos, setTodos] = useState([]);
 
-    if (edit.id) {
-        return <ToDoForm edit={edit} onSubmit={submitUpdate} />;
+  const addTodo = (text) => {
+    let id = 1;
+    if(todos.length > 0) {
+      id = todos[0].id + 1
     }
+    const todo = {id: id, text: text, completed: false, important: false}
+    const newTodos = [todo, ...todos]
+    setTodos(newTodos)
+  };
 
-    return items.map((item,index)=>(
-    <div className={item.isComplete ? "item-row complete" : "item-row"} key={index}>
+  const removeTodo = (id) => {
+    const updatedTodos = [...todos].filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
+  };
 
-        <div key={item.id} onClick={() => completeItem(item.id)}>
-            {item.text}
-        </div>
-
-        <div className="icons">
-            <RiCloseCircleLine onClick={() => removeTodo(item.id)} className="delete-icon"/>
-            <TiEdit onClick={() => setEdit({ id: item.id, value: item.text })} className='edit-icon'/>
-        </div>
-
+  const completeTodo = (id) => {
+    const updatedTodos = todos.map((todo) => {
+      if(todo.id === id) {
+        todo.completed = !todo.completed
+      }
+      return todo
+    })
+    setTodos(updatedTodos)
+  }
+  
+  const sortedTodos = todos.sort((a, b) => b.important - a.important)
+  return (
+    <div className="todo-app mt-5">
+      <h1 className="fs-2 m-4">Lista de tareas</h1>
+      <TodoForm addTodo={addTodo} />
+      {sortedTodos.map((todo) => {
+        return (
+          <TodoItem removeTodo={removeTodo} completeTodo={completeTodo} todo={todo} key={todo.id}/>
+        )
+      })}
     </div>
-  ))
+  );
 }
 
-export default Todo
+export default Todo;
