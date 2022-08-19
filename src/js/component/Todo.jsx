@@ -30,7 +30,7 @@ function Todo() {
     setTodos(updatedTodos)
   }
   
-  const sortedTodos = todos.sort((a, b) => b.important - a.important)
+  const sortedTodos = todos.sort()
   return (
     <div className="todo-app mt-5">
       <h1 className="fs-2 m-4">Lista de tareas</h1>
